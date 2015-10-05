@@ -1,0 +1,66 @@
+#include <stdio.h>
+# include <math.h>
+
+int numOfFactors[1000001];
+int results[1000001];
+
+void initGlobal() {
+	for (int var = 0; var < 1000001; ++var) {
+		numOfFactors[var] = -1;
+	}
+}
+void popilateResults() {
+	for (int i = 2; i < 1000001; ++i) {
+		results[i] = results[i - 1] + numOfFactors[i];
+	}
+}
+
+int numberOfPrimeFactors(int n) {
+	int count = 0;
+	if (numOfFactors[n] >= 0) {
+		return numOfFactors[n];
+	}
+	while (n % 2 == 0) {
+		count++;
+		n = n / 2;
+
+		if (numOfFactors[n] >= 0) {
+			return count + numOfFactors[n];
+		}
+	}
+	for (int i = 3; i <= sqrt(n); i = i + 2) {
+		while (n % i == 0) {
+			count++;
+			n = n / i;
+			if (numOfFactors[n] >= 0) {
+				return count + numOfFactors[n];
+			}
+		}
+	}
+
+	if (n > 2) {
+		count++;
+	}
+	return count;
+}
+
+void initNumberOfFactor() {
+	int x;
+	numOfFactors[0] = 0;
+	numOfFactors[1] = 0;
+	for (int i = 2; i < 1000001; i++) {
+		x = numberOfPrimeFactors(i);
+		numOfFactors[i] = x;
+	}
+}
+
+int main() {
+	int n;
+	initGlobal();
+	initNumberOfFactor();
+	popilateResults();
+
+	while (scanf("%d", &n) != EOF) {
+		printf("%d\n", results[n]);
+	}
+}
